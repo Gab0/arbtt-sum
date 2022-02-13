@@ -56,7 +56,10 @@ def process_arbtt_stats_text(lines):
                 manage_categorized_counter(byday, total_kw, K)
                 if current_id is not None:
                     manage_categorized_counter(byday, str(current_id), K)
+    return byday
 
+
+def show_byday_stats(byday):
     for D, V in byday.items():
         M = dateparser.parse(D)
         if M is not None:
@@ -64,13 +67,20 @@ def process_arbtt_stats_text(lines):
         else:
             print(">" + D)
 
-        d = V.days * 24
-        hours = round(V.seconds / 3600 + d, 2)
+        hours = datetime2hours(V)
         print(f"{hours}h")
 
 
+def datetime2hours(dt):
+    return round(dt.total_seconds() / 3600, 2)
+
+
 def main():
-    process_arbtt_stats_text(sys.stdin.readlines())
+    byday = process_arbtt_stats_text(sys.stdin.readlines())
+    if sys.argv[-1] == "-u":
+        print(datetime2hours(byday["TOTAL"]))
+    else:
+        show_byday_stats(byday)
 
 
 if __name__ == "__main__":
