@@ -50,6 +50,8 @@ def process_arbtt_stats_text(lines):
         ID = f_identifier(line)
         if ID:
             current_id = ID
+        if "Program" not in line:
+            continue
         for match in f_elapsed_time(line):
             if any(match):
                 K = read_time(match)
