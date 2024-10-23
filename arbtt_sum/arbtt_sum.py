@@ -68,17 +68,27 @@ def show_byday_stats(byday):
             print(">" + D)
 
         hours = datetime2hours(V)
-        print(f"{hours}h")
+        print(float_hours_to_human(hours))
 
 
 def datetime2hours(dt):
     return round(dt.total_seconds() / 3600, 2)
 
 
+def float_hours_to_human(hours: float) -> str:
+    # Remove the 'h' and convert the value to float
+
+    # Extract the whole hours and remaining minutes
+    h = int(hours)
+    m = int((hours - h) * 60)
+
+    return f"{h}h{m:02d}m"
+
+
 def main():
     byday = process_arbtt_stats_text(sys.stdin.readlines())
     if sys.argv[-1] == "-u":
-        print(datetime2hours(byday["TOTAL"]))
+        print(float_hours_to_human(datetime2hours(byday["TOTAL"])))
     else:
         show_byday_stats(byday)
 
